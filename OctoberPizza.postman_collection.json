@@ -1,0 +1,390 @@
+{
+	"info": {
+		"_postman_id": "9a344893-da7c-4e2a-96ea-0bd44756cd33",
+		"name": "OctoberPizza",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19844232",
+		"_collection_link": "https://galactic-shuttle-994545.postman.co/workspace/My-Workspace~cde806e3-115e-4bc2-8066-5608abd541ec/collection/19844232-9a344893-da7c-4e2a-96ea-0bd44756cd33?action=share&source=collection_link&creator=19844232"
+	},
+	"item": [
+		{
+			"name": "POST Order",
+			"item": [
+				{
+					"name": "Auth token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://pizzeria-valentino.herokuapp.com/api/auth",
+							"protocol": "https",
+							"host": [
+								"pizzeria-valentino",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NTk3NTAyMzgsIm5iZiI6MTc1OTc1MDIzOCwianRpIjoiYWMxODc1ZGEtMDFkOS00OTc0LWJhYmUtNjU0Mzk5ZGIxZjRiIiwiZXhwIjoxNzU5NzUxMTM4LCJpZGVudGl0eSI6InRlc3QiLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.mP42OkKL-mGJcbFIk8zjhdWwSAmATjUebfdu3Ug25bQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"Crust\": \"THIN\",\r\n        \"Flavor\": \"BEEF-NORMAL\",\r\n        \"Order_ID\": 8,\r\n        \"Size\": \"M\",\r\n        \"Table_No\": 12\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://pizzeria-valentino.herokuapp.com/api/orders",
+							"protocol": "https",
+							"host": [
+								"pizzeria-valentino",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dynamic token",
+			"item": [
+				{
+					"name": "auth token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"token\",pm.response.json().access_token);\r",
+									"console.log(\"Token \" + pm.environment.get(\"token\"));"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://pizzeria-valentino.herokuapp.com/api/auth",
+							"protocol": "https",
+							"host": [
+								"pizzeria-valentino",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"THIN\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"Order_ID\",\"31\");\r",
+									"pm.collectionVariables.set(\"Table_No\",\"27\");\r",
+									"pm.environment.set(\"state\",\"TN\");"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"Crust\": \"THIN\",\r\n        \"Flavor\": \"BEEF-NORMAL\",\r\n        \"Order_ID\": {{Order_ID}},\r\n        \"Size\": \"M\",\r\n        \"Table_No\": {{Table_No}}\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://pizzeria-valentino.herokuapp.com/api/orders",
+							"protocol": "https",
+							"host": [
+								"pizzeria-valentino",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get pizza details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"NORMAL\");\r",
+							"});\r",
+							"pm.test(\"Your test name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    const expectedData = [1,2,3];\r",
+							"    pm.expect(jsonData[3].Order_ID).to.eql(3);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pizzeria-valentino.herokuapp.com/api/orders",
+					"protocol": "https",
+					"host": [
+						"pizzeria-valentino",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify json values",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"User name is charles\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"   const expectedData=[\"Eve\",\"Charles\",\"George\",\"Jannet\",\"Emma\",\"Tracey\"];\r",
+							"    pm.expect(jsonData.data.first_name).to.be.oneOf(expectedData);\r",
+							"});\r",
+							"pm.test(\"user name shoulbe in this order\",function(){\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data[0].first_name).to.be.eql(\"George\");\r",
+							"    pm.expect(jsonData.data[1].first_name).to.be.eql(\"Janet\");\r",
+							"    pm.expect(jsonData.data[2].first_name).to.be.eql(\"Emma\");\r",
+							"    pm.expect(jsonData.data[3].first_name).to.be.eql(\"Eve\");\r",
+							"    pm.expect(jsonData.data[4].first_name).to.be.eql(\"Charles\");\r",
+							"    pm.expect(jsonData.data[5].first_name).to.be.eql(\"Tracey\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "reqres-free-v1",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://reqres.in/api/users",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Variables",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"first-name\",\"Abc\");\r",
+							"pm.collectionVariables.set(\"token\", \"1234567890\");\r",
+							"pm.globals.set(\"url\",\"https://reqres.in/api/users\");\r",
+							"console.log(\"name\"+pm.environment.get(\"first_name\"));\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dynamic token",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "prescript",
+			"value": ""
+		},
+		{
+			"key": "Order_ID",
+			"value": ""
+		},
+		{
+			"key": "Table_No",
+			"value": ""
+		}
+	]
+}
